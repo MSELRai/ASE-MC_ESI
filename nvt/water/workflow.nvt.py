@@ -45,7 +45,7 @@ md.run(10000)
 del atoms.calc
 del atoms.constraints
 
-calc = mace_mp
+calc = mace_mp()
 
 integrator = sys.argv[1] # md or mc
 
