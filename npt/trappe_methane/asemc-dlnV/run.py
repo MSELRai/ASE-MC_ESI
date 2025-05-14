@@ -1,6 +1,7 @@
 import numpy as np
 
 from ase import Atoms, units
+from ase.io.trajectory import Trajectory
 from ase.calculators.lammpsrun import LAMMPS
 from ase.calculators.lammpslib import LAMMPSlib
 
@@ -33,16 +34,17 @@ parameters = {
 
 calc = LAMMPS(files=None, keep_alive = True, **parameters)
 
-random_packing(atoms, probe, n, tolerance=2.0, max_iter=1000)
+random_packing(atoms, probe, n, tolerance=3.0, max_iter=1000)
 
 volume_move = Volume(
                 accepted=0,
                 attempted=0,
-                probability=0.1,
+                probability=0.5,
                 update_frequency=100,
                 max_delta=0.01,
                 beta=1.0 / units.kB / temperature_K,
                 ln_volume=True,
+                limits = (0.001, 0.1),
                 pressure=10.0 * units.bar,
                 mask=None,
                 scale_delta=0.1,
@@ -52,14 +54,15 @@ volume_move = Volume(
 multiparticle_translate_move = HMC(
                 accepted=0,
                 attempted=0,
-                probability=0.9,
-                dt=5.0 * units.fs,
+                probability=0.5,
+                dt=10.0 * units.fs,
                 nsteps=1,
                 beta=1.0 / units.kB / temperature_K,
                 r_overlap=0.5,
                 update_frequency=1000,
+                limits = (1.0*units.fs, 15.0*units.fs),
                 scale_delta=0.1,
-                target_acceptance=0.7,
+                target_acceptance=0.5,
             )
 
 moveset_npt = Moveset([volume_move, multiparticle_translate_move])
@@ -78,6 +81,21 @@ dyn = MonteCarlo(
 dyn.run(25000)
 
 
+# Find the average density from the last half of the
+traj = Trajectory("npt.traj")
+nframes = len(traj)
+volumes = np.zeros(nframes)
+frame = 0
+for atoms_tmp in traj:
+    volumes[frame] = atoms_tmp.get_volume()
+    frame += 1
+
+average_volume = np.mean(volumes[nframes//2:])
+average_length = average_volume**(1./3.)
+atoms.set_cell([average_length, average_length, average_length], scale_atoms = True)
+
+
+# resume with production run
 dyn = MonteCarlo(
     atoms,
     moveset_nvt,
