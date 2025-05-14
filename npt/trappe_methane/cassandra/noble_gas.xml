@@ -1,0 +1,10 @@
+<ForceField>
+ <AtomTypes>
+  <Type name="CH4"  class="CH4"  element="_CH4"  mass="16.0430" def="_CH4"  desc="CH4, united atom" doi="10.1021/jp972543+"/>
+  <Type name="Ar"  class="Ar"  element="Ar"  mass="39.948" def="Ar"  desc="Ar, Vrabec" doi="10.1021/jp012542o"/>
+ </AtomTypes>
+ <NonbondedForce coulomb14scale="0" lj14scale="0">
+  <Atom type="CH4"  charge="0.00" sigma="0.373" epsilon="1.23054"/>
+  <Atom type="Ar"  charge="0.00" sigma="0.33952" epsilon="0.9710457672185798"/>
+ </NonbondedForce>
+</ForceField>
