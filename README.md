@@ -1,5 +1,5 @@
 # ASE-MC_ESI
-Source code and example input files for ASE-MC manuscript. "mc" containes the source code for the Monte Carlo library, and "examples" contains all of the example simulations presented in the manuscript. A prerequisite for using the Monte Carlo library is that ASE is installed (see https://wiki.fysik.dtu.dk/ase/install.html). Also, the example scripts require MACE and MACE-MP0 which can be installed at https://github.com/ACEsuit/mace.
+Source code and example input files for ASE-MC manuscript. "mc" containes the source code for the Monte Carlo library, jupyter contains an annotated workflow for ammonia on Pt-(111) with annotations, and "examples" contains all example scripts presented in the manuscript. A prerequisite for using the Monte Carlo library is that ASE is installed (see https://wiki.fysik.dtu.dk/ase/install.html). Also, the example scripts require MACE and MACE-MP0 which can be installed at https://github.com/ACEsuit/mace.
 
 To install:
 1) Download this repository
