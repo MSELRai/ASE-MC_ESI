@@ -13,7 +13,7 @@ echo "ASE Path is $(pwd)"
 echo "Copying MC library to $(pwd)/ase"
 cp -r $submit_dir/mc $(pwd)/ase
 echo "Successfully added Monte Carlo to ASE!"
-u
+
 # Done!
 cd $submit_dir
 
