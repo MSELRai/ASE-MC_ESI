@@ -4,10 +4,11 @@
 submit_dir=$(pwd)
 
 # Locate ASE
-ase_path=$(which ase)
-cd "$(dirname "$ase_path")"
+ase_executable_path=$(which ase)
+cd "$(dirname "$ase_executable_path")"
 cd ..
-echo "ASE Path is $(pwd)"
+ase_path=$(pwd)
+echo "ASE Path is $(ase_path)"
 
 # Copy MC library
 echo "Copying MC library to $(pwd)/ase"
