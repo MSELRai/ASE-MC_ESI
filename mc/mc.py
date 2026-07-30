@@ -64,7 +64,6 @@ class MonteCarlo(Dynamics):
             Default: ase.parallel.world. Set to None to disable communication.
 
         """
-
         # We need to set the calculator at first for when Dynamics get's initialized
         self.gibbs = isinstance(atoms, list)
         if self.gibbs:
@@ -76,7 +75,7 @@ class MonteCarlo(Dynamics):
             self.last_accepted_config = []
             self.calculator_results = []
 
-            for box_idx in len(atoms):
+            for box_idx in range(len(atoms)):
                 atoms[box_idx].calc = dft_calc
                 _ = atoms[box_idx].get_potential_energy()
 
@@ -123,22 +122,6 @@ class MonteCarlo(Dynamics):
         else:
             self.rng = rng
 
-        # Trajectory is attached here instead of in Dynamics.__init__
-        # to respect the loginterval argument.
-
-        # Cannot do trajectories in the usual way, because of when moves are rejected,
-        # We don't want to have to repeat a calculation and we want the previous configuration saved to the file.
-
-        """
-        if trajectory is not None:
-            if isinstance(trajectory, str):
-                mode = "a" if append_trajectory else "w"
-                trajectory = self.closelater(
-                    Trajectory(trajectory, mode=mode, atoms=atoms)
-                )
-            self.attach(trajectory, interval=loginterval)
-        """
-
         if logfile:
             logger = self.closelater(MCLogger(dyn=self, logfile=logfile))
             self.attach(logger, loginterval)
@@ -180,28 +163,29 @@ class MonteCarlo(Dynamics):
         return energy
 
     def todict(self):
-        # return {'type': 'monte-carlo',
-        #        'mc-type': self.__class__.__name__,
-        #        'moveset': self.dt}
         return {"type": "monte-carlo"}
 
     def irun(self, steps=50):
         """Call Dynamics.irun and adjust max_steps"""
         self.max_steps = steps + self.nsteps
-        return Dynamics.irun(self)
+        return Dynamics.irun(self, steps=steps)
 
     def run(self, steps=50):
         """Call Dynamics.run and adjust max_steps"""
         self.max_steps = steps + self.nsteps
-
-        return Dynamics.run(self)
+        return Dynamics.run(self, steps=steps)
 
     def get_nsteps(self):
         return self.nsteps
 
-    def converged(self):
-        """MC is 'converged' when number of maximum steps is reached."""
+    def converged(self, *args, **kwargs):
+        """MC is 'converged' when number of maximum steps is reached.
+        Accepts *args and **kwargs to safely absorb ASE force arrays."""
         return self.nsteps >= self.max_steps
+        
+    def _traj_is_empty(self):
+        """Safely bypass ASE's native trajectory assertion check."""
+        return False
 
     def get_current_move_stats(self):
         return self.moveset.get_current_move_stats()

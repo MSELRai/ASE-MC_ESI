@@ -67,7 +67,7 @@ class MCMove:
 
         self.pressure = pressure
         self.mask = mask
-        self.ln_ = ln_
+        self.ln_volume = ln_volume
 
         self.b_parameter = b_parameter
         self.reference_energy = reference_energy
@@ -265,10 +265,10 @@ class MCMove:
         return atoms
 
     def generate_v_n(self, atoms):
-        v_o = atoms.get_()
+        v_o = atoms.get_volume()
         zeta = self.generate_uniform_random_number(n=1)
 
-        if self.ln_:
+        if self.ln_volume:
             dlnV = (2.0 * zeta - 1.0) * self.max_delta
             v_n = np.exp(dlnV) * v_o
         else:
@@ -646,7 +646,7 @@ class HMC(MCMove):
         return s
 
 
-class (MCMove):
+class Volume(MCMove):
     def __init__(
         self,
         accepted,

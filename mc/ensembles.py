@@ -107,7 +107,7 @@ class Ensemble:
             for i, atoms in enumerate(self.species):
                 tag = i + self.starting_tag
                 self.species_tags.append(tag)
-                write(f"species_{tag}.xyz", atoms)
+                write(f"species_{tag}.xyz", atoms, write_results=False)
                 for atom in atoms:
                     atom.tag = tag
 
@@ -365,5 +365,4 @@ class BVT(Ensemble):
 
         self.set_thermal_moves()
         self.set_gcmc_moves()
-
 
